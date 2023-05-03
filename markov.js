@@ -1,6 +1,6 @@
 /** Textual markov chain generator */
 
-class MarkovMachine {
+module.exports = class MarkovMachine {
   /** build markov machine; read in text.*/
 
   constructor(text) {
@@ -54,20 +54,37 @@ class MarkovMachine {
         // set key value pair as current word and the array of next words
         this.chains[currWord] = nextWords;
       }
-      console.log(this.chains);
     }
   }
 
   /** return random text from chains */
 
-  makeText(numWords = 100) {
+  makeText(numWords = 1000) {
     // TODO
-  }
-}
+    // set up the array for our new words that will be added in order
 
-// to instantiate it
-let mm = new MarkovMachine("the cat in the hat");
+    let newWordsArray = [];
+    // randomly pick starting word and add to our array:
+    let randStartIndex = Math.floor(Math.random() * this.words.length);
+    newWordsArray.push(this.words[randStartIndex]);
+
+    // get the next word based on index of last word in array and add it to the sentence array
+    // infinite loop until the next words list is null/undefined
+    while (true) {
+      let nextWords = this.chains[newWordsArray[newWordsArray.length - 1]];
+      if (!nextWords || newWordsArray.length >= numWords) {
+        return console.log(newWordsArray.join(" "));
+      }
+      let randWordIndex = Math.floor(Math.random() * nextWords.length);
+      newWordsArray.push(nextWords[randWordIndex]);
+    }
+  }
+};
+
+// // to instantiate it
+// let mm = new MarkovMachine("the cat in the hat");
 
 // mm.makeText();
 
-// mm.makeText(numWords=50);
+// // controls max number of words
+// mm.makeText((numWords = 50));
